@@ -7,3 +7,6 @@ cache
 python-venv
 regression-*
 *_code
+
+scylladb-volume/
+*.lock

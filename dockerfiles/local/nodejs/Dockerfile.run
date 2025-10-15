@@ -3,7 +3,7 @@ FROM ${BASE_IMAGE}
 
 RUN deps=''\
   && apt-get update\
-  && apt-get install -y --no-install-recommends curl net-tools gosu python3 sudo ${deps}\
+  && apt-get install -y --no-install-recommends curl net-tools gosu procps strace python3 sudo ${deps}\
   && apt-get purge -y --auto-remove ${deps}
 
 RUN mkdir -p /sebs
@@ -24,4 +24,5 @@ COPY dockerfiles/local/entrypoint.sh /sebs/entrypoint.sh
 RUN chmod +x /sebs/entrypoint.sh
 RUN chmod +x /sebs/run.sh
 
-ENTRYPOINT ["/sebs/entrypoint.sh"]
+RUN mkdir -p /logs
+ENTRYPOINT ["strace", "-f", "-Co", "/logs/stracerun.log", "/sebs/entrypoint.sh"]

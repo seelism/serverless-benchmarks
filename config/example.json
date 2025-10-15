@@ -7,8 +7,8 @@
     "architecture": "arm64", 
     "container_deployment": true,
     "runtime": {
-      "language": "python",
-      "version": "3.8"
+      "language": "nodejs",
+      "version": "20"
     },
     "type": "invocation-overhead",
     "perf-cost": {

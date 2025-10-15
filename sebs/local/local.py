@@ -169,6 +169,9 @@ class Local(System):
             ).items():
                 environment[f"NOSQL_STORAGE_TABLE_{original_name}"] = actual_name
 
+        host_log_dir = os.path.abspath("./sebs_logs")
+        os.makedirs(host_log_dir, exist_ok=True)
+
         # FIXME: make CPUs configurable
         # FIXME: configure memory
         # FIXME: configure timeout
@@ -178,7 +181,9 @@ class Local(System):
         container_kwargs = {
             "image": container_name,
             "command": f"/bin/bash /sebs/run_server.sh {self.DEFAULT_PORT}",
-            "volumes": {code_package.code_location: {"bind": "/function", "mode": "ro"}},
+            "volumes": {
+                code_package.code_location: {"bind": "/function", "mode": "ro"},
+                host_log_dir: {"bind": "/logs", "mode": "rw"}},
             "environment": environment,
             "privileged": True,
             "security_opt": ["seccomp:unconfined"],
