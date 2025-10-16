@@ -4,7 +4,7 @@ FROM ${BASE_IMAGE}
 RUN deps=''\
   && apt-get update\
   # for route and sudo
-  && apt-get install --no-install-recommends -y curl gosu net-tools sudo ${deps}\
+  && apt-get install --no-install-recommends -y curl gosu strace procps net-tools sudo ${deps}\
   && apt-get purge -y --auto-remove ${deps}\
   && pip3 install cffi minio bottle
 
@@ -22,4 +22,5 @@ COPY dockerfiles/local/entrypoint.sh /sebs/entrypoint.sh
 RUN chmod +x /sebs/entrypoint.sh
 RUN chmod +x /sebs/run.sh
 
-ENTRYPOINT ["/sebs/entrypoint.sh"]
+RUN mkdir -p /logs
+ENTRYPOINT ["strace", "-f", "-Co", "/logs/stracerun.log", "/sebs/entrypoint.sh"]
